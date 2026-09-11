@@ -1,0 +1,6 @@
+#!/bin/bash
+# v33 members: LG regime switch at May 2023 (LG_MAY=1 must also be the inference default before building)
+cd /home/lhjin0j/Documents/lgaimers_phase2
+(CTX_FEATS=1 LG_MAY=1 /home/lhjin0j/Documents/lgaimers_phase2/.venv/bin/python src/train_final.py --model lgb_mc --feats V1 --rounds 180 --seeds 0,1,2,3,4,5,6,7 --tag lgb_mc_off_ctx_lgm_fw2 --weight 0.25 --wexp 0.15 --fw 2.0 --offset bayes --params '{"num_threads":8}'; echo done > experiments/v33_cpu.done) > experiments/v33_cpu.log 2>&1 &
+(LG_MAY=1 /home/lhjin0j/Documents/lgaimers_phase2/.venv/bin/python src/nn_export.py --tag nn_ids_off8w_ctx_lgm --epochs 8 --lr 1e-3 --hidden 768,384,192 --drop 0.2 --id_drop 0.15 --hidden 768,384,192 --seeds 0,1,2,3,4,5,6,7 --weight 0.3 --offset --ctx_offset --wexp 0.15; LG_MAY=1 /home/lhjin0j/Documents/lgaimers_phase2/.venv/bin/python src/nn_export.py --tag nn_wide3_off_lgm --epochs 8 --lr 1e-3 --hidden 768,384,192 --drop 0.2 --id_drop 0.15 --hidden 768,384,192 --seeds 0,1,2 --weight 0.1 --offset --no_ids; CTX_FEATS=1 LG_MAY=1 /home/lhjin0j/Documents/lgaimers_phase2/.venv/bin/python src/train_final.py --model cat_mc --cat_ids --feats V1 --rounds 2750 --seeds 0,1,2,3,4,5,6,7 --tag cat_mc_ids3_ctx_lgm --weight 0.35 --params '{"lr":0.02,"depth":7,"l2":10}'; echo done > experiments/v33_gpu.done) > experiments/v33_gpu.log 2>&1 &
+wait
